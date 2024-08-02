@@ -5,11 +5,16 @@ import java.util.Arrays;
 import java.util.List;
 
 public class SplitArray {
-    public static void splitArray() {
-        int[] numbers1 = {10, 11, 7, 7, 12};
-        int k1 = 2;
-        System.out.println("Input: " + Arrays.toString(numbers1) + ", K = " + k1);
-        splitIntoParts(numbers1, k1);
+
+    /**
+     * Метод для разбиения массива чисел на К сумм
+     *
+     * @param numbers исходный массив
+     * @param numberOfPartitions - K количество сумм
+     */
+    public static void splitArray(int [] numbers, int numberOfPartitions) {
+        System.out.println("Исходный массив: " + Arrays.toString(numbers) + ", K = " + numberOfPartitions);
+        splitIntoParts(numbers, numberOfPartitions);
     }
 
     private static void splitIntoParts(int[] numbers, int k) {
@@ -22,10 +27,12 @@ public class SplitArray {
         }
 
         List<List<Integer>> result = new ArrayList<>();
-        boolean[] used = new boolean[numbers.length];
+        for (int i = 0; i < k; i++) {
+            result.add(new ArrayList<>());
+        }
 
-        if (findPartitions(numbers, used, result, averageMinSum, k)) {
-            for (int i = 0; i < result.size(); i++) {
+        if (canSplit(numbers, result, 0, averageMinSum, k)) {
+            for (int i = 0; i < k; i++) {
                 List<Integer> part = result.get(i);
                 System.out.println(part + ", " + (averageMinSum + i));
             }
@@ -34,39 +41,29 @@ public class SplitArray {
         }
     }
 
-    private static boolean findPartitions(int[] numbers, boolean[] used, List<List<Integer>> result,
-                                          int averageMinSum, int k) {
-        if (result.size() == k) {
-            return true;
+    private static boolean canSplit(int[] numbers, List<List<Integer>> parts, int index, int averageSum, int k) {
+        if (index == numbers.length) {
+            return checkParts(parts, averageSum, k);
         }
 
-        List<Integer> currentPart = new ArrayList<>();
-        int currentSum = 0;
-
-        for (int i = 0; i < numbers.length; i++) {
-            if (!used[i]) {
-                currentPart.add(numbers[i]);
-                currentSum += numbers[i];
-                used[i] = true;
-
-                if (currentSum == averageMinSum + result.size()) {
-                    result.add(currentPart);
-                    if (findPartitions(numbers, used, result, averageMinSum, k)) {
-                        return true;
-                    }
-                    result.remove(result.size() - 1);
-                } else if (currentSum < averageMinSum + result.size()) {
-                    if (findPartitions(numbers, used, result, averageMinSum, k)) {
-                        return true;
-                    }
-                }
-
-                currentPart.remove(currentPart.size() - 1);
-                currentSum -= numbers[i];
-                used[i] = false;
+        for (int i = 0; i < k; i++) {
+            parts.get(i).add(numbers[index]);
+            if (canSplit(numbers, parts, index + 1, averageSum, k)) {
+                return true;
             }
+            parts.get(i).remove(parts.get(i).size() - 1); // Backtrack
         }
 
         return false;
+    }
+
+    private static boolean checkParts(List<List<Integer>> parts, int L, int K) {
+        for (int i = 0; i < K; i++) {
+            int sum = parts.get(i).stream().mapToInt(Integer::intValue).sum();
+            if (sum != L + i) {
+                return false;
+            }
+        }
+        return true;
     }
 }

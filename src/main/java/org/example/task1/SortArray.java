@@ -7,22 +7,19 @@ import java.util.stream.Stream;
 
 public class SortArray {
 
-    public static void sortArray() {
-        List<Integer> numbers = new ArrayList<>();
-
-        Random random = new Random();
-        for (int i = 0; i < 30; i++) {
-            numbers.add(random.nextInt(101) - 50); // случайные числа от -50 до 50
-        }
-
+    /**
+     * Метод для сортировки массива и вывода результата
+     *
+     * @param numbers исходный массив данных
+     */
+    public static void sortArray(List<Integer> numbers) {
         System.out.println("Исходный массив: " + numbers);
 
-        List<Integer> result = SortArray(numbers);
-        System.out.println("Итоговый массив: " + result);
-
+        List<Integer> result = sortArrayByEvenAndOdd(numbers);
+        System.out.println("Итоговый массив: " + result );
     }
 
-    private static List<Integer> SortArray(List<Integer> list) {
+    private static List<Integer> sortArrayByEvenAndOdd(List<Integer> list) {
         List<Integer> evenList = IntStream.range(0, list.size())
                 .filter(i -> list.get(i) % 2 == 0 && list.get(i) != 0)
                 .mapToObj(list::get)

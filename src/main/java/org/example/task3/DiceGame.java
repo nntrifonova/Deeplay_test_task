@@ -1,7 +1,6 @@
 package org.example.task3;
 
 import java.util.Random;
-import java.util.Scanner;
 
 public class DiceGame {
     int[] player1Sequence;
@@ -12,25 +11,10 @@ public class DiceGame {
         this.player2Sequence = player2Sequence;
     }
 
-    public static void diceGame() {
-        int[] player1Sequence = insertPlayersSequence();
-        int[] player2Sequence = insertPlayersSequence();
-
-        DiceGame currentGame = new DiceGame(player1Sequence, player2Sequence);
-        currentGame.countProbability();
-    }
-
-    private static int[] insertPlayersSequence() {
-        Scanner input = new Scanner(System.in);
-        int[] player = new int[3];
-        for (int i = 0; i < 3; i++) {
-            System.out.println("Please enter number");
-            player[i] = input.nextInt();
-        }
-        return player;
-    }
-
-    private void countProbability() {
+    /**
+     * Метод определяющий вероятности выигрыша каждого из игроков или ничьей
+     */
+    public void countProbability() {
         int[] player1Sequence = this.player1Sequence;
         int[] player2Sequence = this.player2Sequence;
         int numberOfRolls = 1000;
@@ -68,7 +52,7 @@ public class DiceGame {
         int[] rolls = new int[numberOfRolls];
 
         for (int i = 0; i < numberOfRolls; i++) {
-            rolls[i] = random.nextInt(6) + 1; // Генерируем число от 1 до 6
+            rolls[i] = random.nextInt(6) + 1;
         }
 
         for (int j = 0; j < numberOfRolls - 2; j++) {
